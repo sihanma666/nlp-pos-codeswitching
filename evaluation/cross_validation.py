@@ -1,5 +1,5 @@
 import random
-from typing import Dict, List, Sequence, Tuple
+from statistics import mean
 
 
 def average(results, key):
@@ -37,9 +37,9 @@ def run_kfold_evaluation(gold_data, tagger, k = 5,seed = 42):
     splits = k_fold_split(gold_data, k=k, seed=seed)
     fold_results = []
 
-    for fold_idx, (train_fold, val_fold) in enumerate(splits, start=1):
+    for fold_idx, (_, val_fold) in enumerate(splits, start=1):
         predictions = tagger.tag_batch(val_fold)
-        metrics = evaluate_batch(predictions, list(val_fold))
+        metrics = evaluate_batch(predictions, val_fold)
         metrics["fold"] = fold_idx
         metrics["val_size"] = len(val_fold)
         fold_results.append(metrics)
