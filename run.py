@@ -2,7 +2,7 @@ import json
 from preprocessing.pos_tagger import CodeSwitchingPOSTagger
 from evaluation.baseline_metrics import evaluate_batch, print_evaluation
 from evaluation.cross_validation import run_kfold_evaluation, print_cv_summary
-
+#########gold data !!!
 with open("your_gold_data.json", "r", encoding="utf-8") as f:
     gold_data = json.load(f)
 
