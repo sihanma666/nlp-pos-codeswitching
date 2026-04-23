@@ -13,4 +13,31 @@ metrics = evaluate_batch(predictions, gold_data)
 print_evaluation(metrics)
 
 fold_results, summary = run_kfold_evaluation(gold_data, tagger)
-print_cv_summary(fold_results, summary)
+
+
+print("\n" + "=" * 60)
+print(f"{summary['k']}-fold cross validation results")
+print("=" * 60)
+
+for result in fold_results:
+    print(f"\nFold {result['fold']}:")
+
+    print(f"  overall accuracy: {result['overall_accuracy']}")
+    print(f"  overall macro f1: {result['overall_macro_f1']}")
+
+    if result["switch_accuracy"] != None:
+        print(f"  switch accuracy: {result['switch_accuracy']}")
+        print(f"  switch macro f1: {result['switch_macro_f1']}")
+    else:
+        print("  switch metrics: N/A")
+
+print("\nAverage across folds:")
+
+print(f"  overall accuracy: {summary['cv_overall_accuracy']}")
+print(f"  overall macro f1: {summary['cv_overall_macro_f1']}")
+
+if summary["cv_switch_accuracy"] != None:
+    print(f"  switch accuracy: {summary['cv_switch_accuracy']}")
+    print(f"  switch macro f1: {summary['cv_switch_macro_f1']}")
+else:
+    print("  switch metrics: N/A")
