@@ -7,6 +7,52 @@ Provides accuracy metrics for the code-switching POS tagger.
 from typing import List, Dict, Tuple
 from collections import defaultdict
 
+from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+
+def macro_f1(predictions, references):
+    return f1_score(references, predictions, average="macro")
+
+def extract_pos_tags(item, key="pred"):
+    if key == "pred":
+        if "pred_pos_tags" in item:
+            return item["pred_pos_tags"]
+        elif "pos_tags" in item:
+            return [x[1] for x in item["pos_tags"]]
+        elif "tokens_with_pos" in item:
+            return [x["pos"] for x in item["tokens_with_pos"]]
+
+    elif key == "gold":
+        if "gold_pos_tags" in item:
+            return item["gold_pos_tags"]
+        elif "pos_tags" in item:
+            return [x[1] for x in item["pos_tags"]]
+        elif "tokens_with_pos" in item:
+            return [x["pos"] for x in item["tokens_with_pos"]]
+
+    raise ValueError("Cannot extract POS tags")
+
+def switch_point_metrics(results, gold_data):
+    switch_gold = []
+    switch_pred = []
+
+    for pred_item, gold_item in zip(results, gold_data):
+        gold_tags = extract_pos_tags(gold_item, key="gold")
+        pred_tags = extract_pos_tags(pred_item, key="pred")
+
+        for idx in gold_item.get("switch_points", []):
+            if idx < len(gold_tags):
+                switch_gold.append(gold_tags[idx])
+                switch_pred.append(pred_tags[idx])
+
+    if len(switch_gold) == 0:
+        return {"switch_accuracy": None, "switch_macro_f1": None}
+
+    return {
+        "switch_accuracy": accuracy_score(switch_gold, switch_pred),
+        "switch_macro_f1": macro_f1(switch_pred, switch_gold)
+    }
+
 
 def token_accuracy(predictions: List[str], references: List[str]) -> float:
     """
@@ -115,12 +161,14 @@ def evaluate_batch(results: List[Dict], gold_standard: List[Dict]) -> Dict:
 
     # Calculate metrics
     overall_acc = token_accuracy(all_predictions, all_references)
+    overall_macro_f1 = macro_f1(all_predictions, all_references)
     lang_specific = language_specific_accuracy(
         all_predictions, all_references, all_languages
     )
 
     return {
         "overall_accuracy": overall_acc,
+        "overall_macro_f1": overall_macro_f1,
         "accuracy_by_language": lang_specific,
         "total_tokens": len(all_predictions),
         "confusion_matrix": confusion_matrix(all_predictions, all_references),
@@ -140,6 +188,7 @@ def print_evaluation(metrics: Dict):
 
     print(f"\nTotal tokens evaluated: {metrics['total_tokens']}")
     print(f"Overall accuracy: {metrics['overall_accuracy']:.4f}")
+    print(f"Overall macro f1: {metrics['overall_macro_f1']:.4f}")
 
     lang_acc = metrics["accuracy_by_language"]
     print(f"\nAccuracy by language:")
