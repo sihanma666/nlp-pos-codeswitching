@@ -1,0 +1,597 @@
+[
+  {
+    "id": 0,
+    "text": "我刚刚开始record",
+    "tokens": [
+      "我",
+      "刚",
+      "刚",
+      "开",
+      "始",
+      "record"
+    ],
+    "language_labels": [
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "EN"
+    ],
+    "switch_points": [
+      5
+    ],
+    "pos_tags": [
+      [
+        "我",
+        "PRON"
+      ],
+      [
+        "刚",
+        "ADV"
+      ],
+      [
+        "刚",
+        "ADV"
+      ],
+      [
+        "开",
+        "VERB"
+      ],
+      [
+        "始",
+        "VERB"
+      ],
+      [
+        "record",
+        "PROPN"
+      ]
+    ],
+    "tokens_with_pos": [
+      {
+        "token": "我",
+        "pos": "PRON"
+      },
+      {
+        "token": "刚",
+        "pos": "ADV"
+      },
+      {
+        "token": "刚",
+        "pos": "ADV"
+      },
+      {
+        "token": "开",
+        "pos": "VERB"
+      },
+      {
+        "token": "始",
+        "pos": "VERB"
+      },
+      {
+        "token": "record",
+        "pos": "PROPN"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "text": "嗯hello我的名字叫徐妍",
+    "tokens": [
+      "嗯",
+      "hello",
+      "我",
+      "的",
+      "名",
+      "字",
+      "叫",
+      "徐",
+      "妍"
+    ],
+    "language_labels": [
+      "ZH",
+      "EN",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH"
+    ],
+    "switch_points": [
+      1,
+      2
+    ],
+    "pos_tags": [
+      [
+        "嗯",
+        "INTJ"
+      ],
+      [
+        "hello",
+        "NOUN"
+      ],
+      [
+        "我",
+        "PRON"
+      ],
+      [
+        "的",
+        "PART"
+      ],
+      [
+        "名",
+        "NOUN"
+      ],
+      [
+        "字",
+        "NOUN"
+      ],
+      [
+        "叫",
+        "VERB"
+      ],
+      [
+        "徐",
+        "PROPN"
+      ],
+      [
+        "妍",
+        "PROPN"
+      ]
+    ],
+    "tokens_with_pos": [
+      {
+        "token": "嗯",
+        "pos": "INTJ"
+      },
+      {
+        "token": "hello",
+        "pos": "NOUN"
+      },
+      {
+        "token": "我",
+        "pos": "PRON"
+      },
+      {
+        "token": "的",
+        "pos": "PART"
+      },
+      {
+        "token": "名",
+        "pos": "NOUN"
+      },
+      {
+        "token": "字",
+        "pos": "NOUN"
+      },
+      {
+        "token": "叫",
+        "pos": "VERB"
+      },
+      {
+        "token": "徐",
+        "pos": "PROPN"
+      },
+      {
+        "token": "妍",
+        "pos": "PROPN"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "text": "嗯初次见面nice to meet you嗯",
+    "tokens": [
+      "嗯",
+      "初",
+      "次",
+      "见",
+      "面",
+      "nice",
+      "to",
+      "meet",
+      "you",
+      "嗯"
+    ],
+    "language_labels": [
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "EN",
+      "EN",
+      "EN",
+      "EN",
+      "ZH"
+    ],
+    "switch_points": [
+      5,
+      9
+    ],
+    "pos_tags": [
+      [
+        "嗯",
+        "INTJ"
+      ],
+      [
+        "初",
+        "NOUN"
+      ],
+      [
+        "次",
+        "NOUN"
+      ],
+      [
+        "见",
+        "VERB"
+      ],
+      [
+        "面",
+        "VERB"
+      ],
+      [
+        "nice",
+        "NOUN"
+      ],
+      [
+        "to",
+        "PART"
+      ],
+      [
+        "meet",
+        "VERB"
+      ],
+      [
+        "you",
+        "NOUN"
+      ],
+      [
+        "嗯",
+        "INTJ"
+      ]
+    ],
+    "tokens_with_pos": [
+      {
+        "token": "嗯",
+        "pos": "INTJ"
+      },
+      {
+        "token": "初",
+        "pos": "NOUN"
+      },
+      {
+        "token": "次",
+        "pos": "NOUN"
+      },
+      {
+        "token": "见",
+        "pos": "VERB"
+      },
+      {
+        "token": "面",
+        "pos": "VERB"
+      },
+      {
+        "token": "nice",
+        "pos": "NOUN"
+      },
+      {
+        "token": "to",
+        "pos": "PART"
+      },
+      {
+        "token": "meet",
+        "pos": "VERB"
+      },
+      {
+        "token": "you",
+        "pos": "NOUN"
+      },
+      {
+        "token": "嗯",
+        "pos": "INTJ"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "text": "今天呢我非常希望能够通过这个机会去跟你make friends",
+    "tokens": [
+      "今",
+      "天",
+      "呢",
+      "我",
+      "非",
+      "常",
+      "希",
+      "望",
+      "能",
+      "够",
+      "通",
+      "过",
+      "这",
+      "个",
+      "机",
+      "会",
+      "去",
+      "跟",
+      "你",
+      "make",
+      "friends"
+    ],
+    "language_labels": [
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "EN",
+      "EN"
+    ],
+    "switch_points": [
+      19
+    ],
+    "pos_tags": [
+      [
+        "今",
+        "NOUN"
+      ],
+      [
+        "天",
+        "NOUN"
+      ],
+      [
+        "呢",
+        "PART"
+      ],
+      [
+        "我",
+        "PRON"
+      ],
+      [
+        "非",
+        "ADV"
+      ],
+      [
+        "常",
+        "ADV"
+      ],
+      [
+        "希",
+        "VERB"
+      ],
+      [
+        "望",
+        "VERB"
+      ],
+      [
+        "能",
+        "VERB"
+      ],
+      [
+        "够",
+        "VERB"
+      ],
+      [
+        "通",
+        "ADP"
+      ],
+      [
+        "过",
+        "ADP"
+      ],
+      [
+        "这",
+        "DET"
+      ],
+      [
+        "个",
+        "DET"
+      ],
+      [
+        "机",
+        "NOUN"
+      ],
+      [
+        "会",
+        "NOUN"
+      ],
+      [
+        "去",
+        "VERB"
+      ],
+      [
+        "跟",
+        "ADP"
+      ],
+      [
+        "你",
+        "PRON"
+      ],
+      [
+        "make",
+        "NOUN"
+      ],
+      [
+        "friends",
+        "NOUN"
+      ]
+    ],
+    "tokens_with_pos": [
+      {
+        "token": "今",
+        "pos": "NOUN"
+      },
+      {
+        "token": "天",
+        "pos": "NOUN"
+      },
+      {
+        "token": "呢",
+        "pos": "PART"
+      },
+      {
+        "token": "我",
+        "pos": "PRON"
+      },
+      {
+        "token": "非",
+        "pos": "ADV"
+      },
+      {
+        "token": "常",
+        "pos": "ADV"
+      },
+      {
+        "token": "希",
+        "pos": "VERB"
+      },
+      {
+        "token": "望",
+        "pos": "VERB"
+      },
+      {
+        "token": "能",
+        "pos": "VERB"
+      },
+      {
+        "token": "够",
+        "pos": "VERB"
+      },
+      {
+        "token": "通",
+        "pos": "ADP"
+      },
+      {
+        "token": "过",
+        "pos": "ADP"
+      },
+      {
+        "token": "这",
+        "pos": "DET"
+      },
+      {
+        "token": "个",
+        "pos": "DET"
+      },
+      {
+        "token": "机",
+        "pos": "NOUN"
+      },
+      {
+        "token": "会",
+        "pos": "NOUN"
+      },
+      {
+        "token": "去",
+        "pos": "VERB"
+      },
+      {
+        "token": "跟",
+        "pos": "ADP"
+      },
+      {
+        "token": "你",
+        "pos": "PRON"
+      },
+      {
+        "token": "make",
+        "pos": "NOUN"
+      },
+      {
+        "token": "friends",
+        "pos": "NOUN"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "text": "嗯你知道就是",
+    "tokens": [
+      "嗯",
+      "你",
+      "知",
+      "道",
+      "就",
+      "是"
+    ],
+    "language_labels": [
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH",
+      "ZH"
+    ],
+    "switch_points": [],
+    "pos_tags": [
+      [
+        "嗯",
+        "INTJ"
+      ],
+      [
+        "你",
+        "PRON"
+      ],
+      [
+        "知",
+        "VERB"
+      ],
+      [
+        "道",
+        "VERB"
+      ],
+      [
+        "就",
+        "ADV"
+      ],
+      [
+        "是",
+        "ADV"
+      ]
+    ],
+    "tokens_with_pos": [
+      {
+        "token": "嗯",
+        "pos": "INTJ"
+      },
+      {
+        "token": "你",
+        "pos": "PRON"
+      },
+      {
+        "token": "知",
+        "pos": "VERB"
+      },
+      {
+        "token": "道",
+        "pos": "VERB"
+      },
+      {
+        "token": "就",
+        "pos": "ADV"
+      },
+      {
+        "token": "是",
+        "pos": "ADV"
+      }
+    ]
+  }
+]
