@@ -288,6 +288,158 @@ class CodeSwitchingPOSTagger:
         }
 
 
+class NaiveBaselinePOSTagger:
+    """
+    Naive baseline POS tagger: processes all tokens through English spaCy model only.
+
+    This baseline ignores language detection and processes everything as English.
+    Used to demonstrate degradation on Chinese and code-switch tokens.
+    """
+
+    def __init__(self, en_model_name: str = "en_core_web_sm"):
+        """
+        Initialize the naive baseline tagger with English model only.
+
+        Args:
+            en_model_name: Name of the English spaCy model
+        """
+        try:
+            self.en_model = spacy.load(en_model_name)
+        except OSError:
+            raise OSError(
+                f"English model '{en_model_name}' not found. "
+                f"Install with: python -m spacy download {en_model_name}"
+            )
+
+    def tag_utterance(
+        self,
+        text: str,
+        tokens: Optional[List[str]] = None,
+        language_labels: Optional[List[str]] = None,
+    ) -> List[Tuple[str, str]]:
+        """
+        Tag POS using only the English model (ignoring language labels).
+
+        Args:
+            text: Full utterance as a string
+            tokens: List of tokens from preprocessing (used for alignment)
+            language_labels: Ignored; kept for interface compatibility
+
+        Returns:
+            List of (token, upos_tag) tuples
+        """
+        # If preprocessed tokens are provided, use them directly for alignment
+        if tokens is not None:
+            return self._tag_with_preprocessed_tokens(text, tokens)
+
+        # Otherwise, use spaCy's tokenization
+        en_doc = self.en_model(text)
+        result = [(token.text, token.pos_) for token in en_doc]
+        return result
+
+    def _tag_with_preprocessed_tokens(
+        self, text: str, tokens: List[str]
+    ) -> List[Tuple[str, str]]:
+        """
+        Tag POS using preprocessed tokens with English model only.
+
+        Args:
+            text: Full utterance text
+            tokens: Preprocessed tokens
+
+        Returns:
+            List of (token, upos_tag) tuples
+        """
+        # Process text through English model
+        en_doc = self.en_model(text)
+
+        # Build character position -> token mapping for alignment
+        char_pos = 0
+        token_positions = {}
+
+        for token in tokens:
+            token_start = text.find(token, char_pos)
+            if token_start != -1:
+                token_positions[token] = (token_start, token_start + len(token))
+                char_pos = token_start + len(token)
+
+        # For each preprocessed token, find overlapping spaCy token
+        result = []
+        for token in tokens:
+            if token in token_positions:
+                token_start, token_end = token_positions[token]
+            else:
+                token_start = text.find(token)
+                token_end = token_start + len(token) if token_start != -1 else -1
+
+            # Find overlapping spaCy token and get its POS tag
+            if token_start != -1:
+                upos = self._get_upos_for_position(text, token_start, token_end, en_doc)
+            else:
+                upos = "UNKNOWN"
+
+            result.append((token, upos))
+
+        return result
+
+    def _get_upos_for_position(self, text: str, start: int, end: int, en_doc) -> str:
+        """
+        Get the UPOS tag for a specific character position range.
+
+        Args:
+            text: Full text
+            start: Character start position
+            end: Character end position
+            en_doc: English spaCy doc
+
+        Returns:
+            The UPOS tag
+        """
+        mid_pos = start + (end - start) // 2
+
+        for token in en_doc:
+            if token.idx <= mid_pos < token.idx + len(token.text):
+                return token.pos_
+
+        # Fallback to first token's POS if no match
+        return en_doc[0].pos_ if len(en_doc) > 0 else "UNKNOWN"
+
+    def tag_batch(self, data: List[Dict]) -> List[Dict]:
+        """
+        Tag POS for a batch of utterances using English model only.
+
+        Args:
+            data: List of dictionaries with utterance information
+
+        Returns:
+            List of dictionaries with added "pos_tags" field
+        """
+        results = []
+        for item in data:
+            text = item.get("text", "")
+            tokens = item.get("tokens", [])
+
+            pos_results = self.tag_utterance(text, tokens)
+
+            # Add results to item
+            item_with_pos = item.copy()
+            item_with_pos["pos_tags"] = pos_results
+            item_with_pos["tokens_with_pos"] = [
+                {"token": token, "pos": pos} for token, pos in pos_results
+            ]
+            results.append(item_with_pos)
+
+        return results
+
+    def get_model_info(self) -> Dict[str, str]:
+        """Get information about loaded model."""
+        return {
+            "en_model": self.en_model.meta.get("name", "unknown"),
+            "en_version": self.en_model.meta.get("version", "unknown"),
+            "tagger_type": "naive_baseline",
+        }
+
+
 def print_results(results: List[Dict], num_examples: int = 5):
     """
     Pretty-print POS tagging results.

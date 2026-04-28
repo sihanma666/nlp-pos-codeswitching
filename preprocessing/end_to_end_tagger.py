@@ -17,10 +17,16 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from preprocessing.language_labels import add_language_labels_to_data
-from preprocessing.pos_tagger import CodeSwitchingPOSTagger, print_results
+from preprocessing.pos_tagger import (
+    CodeSwitchingPOSTagger,
+    NaiveBaselinePOSTagger,
+    print_results,
+)
 
 
-def process_file(input_path: str, output_path: str, verbose: bool = True) -> dict:
+def process_file(
+    input_path: str, output_path: str, verbose: bool = True, mode: str = "codeswitching"
+) -> dict:
     """
     Complete end-to-end processing pipeline.
 
@@ -28,13 +34,17 @@ def process_file(input_path: str, output_path: str, verbose: bool = True) -> dic
         input_path: Path to input JSON file with preprocessed tokens
         output_path: Path for output JSON file with POS tags
         verbose: Whether to print progress and results
+        mode: Tagger mode - "codeswitching" (smart with lang detection) or "naive_baseline" (English only)
 
     Returns:
         Dict with processing statistics
     """
     if verbose:
         print("=" * 70)
-        print("END-TO-END POS TAGGING PIPELINE")
+        if mode == "naive_baseline":
+            print("NAIVE BASELINE POS TAGGING PIPELINE (English model only)")
+        else:
+            print("END-TO-END POS TAGGING PIPELINE (Code-switching aware)")
         print("=" * 70)
 
     # Step 1: Load input data
@@ -51,33 +61,47 @@ def process_file(input_path: str, output_path: str, verbose: bool = True) -> dic
     if verbose:
         print(f"✓ Loaded {len(data)} utterances")
 
-    # Step 2: Add language labels and switch points
-    if verbose:
-        print(f"\n[2/4] Adding language labels and switch points...")
-
-    # Check if labels already exist
-    has_labels = all("language_labels" in item for item in data)
-    if has_labels:
+    # Step 2: Add language labels and switch points (skip for naive baseline)
+    if mode == "naive_baseline":
         if verbose:
-            print("✓ Language labels already present, skipping...")
+            print(
+                f"\n[2/4] Skipping language labels (naive baseline uses English model for all tokens)"
+            )
         enhanced_data = data
     else:
-        enhanced_data = add_language_labels_to_data(data)
         if verbose:
-            print(f"✓ Added language labels and switch points")
+            print(f"\n[2/4] Adding language labels and switch points...")
+
+        # Check if labels already exist
+        has_labels = all("language_labels" in item for item in data)
+        if has_labels:
+            if verbose:
+                print("✓ Language labels already present, skipping...")
+            enhanced_data = data
+        else:
+            enhanced_data = add_language_labels_to_data(data)
+            if verbose:
+                print(f"✓ Added language labels and switch points")
 
     # Step 3: Initialize and tag with POS tagger
     if verbose:
         print(f"\n[3/4] Initializing POS tagger and tagging utterances...")
 
     try:
-        tagger = CodeSwitchingPOSTagger(
-            en_model_name="en_core_web_sm", zh_model_name="zh_core_web_sm"
-        )
-        if verbose:
-            info = tagger.get_model_info()
-            print(f"✓ English model: {info['en_model']} v{info['en_version']}")
-            print(f"✓ Chinese model: {info['zh_model']} v{info['zh_version']}")
+        if mode == "naive_baseline":
+            tagger = NaiveBaselinePOSTagger(en_model_name="en_core_web_sm")
+            if verbose:
+                info = tagger.get_model_info()
+                print(f"✓ English model: {info['en_model']} v{info['en_version']}")
+                print(f"✓ Mode: {info['tagger_type']}")
+        else:
+            tagger = CodeSwitchingPOSTagger(
+                en_model_name="en_core_web_sm", zh_model_name="zh_core_web_sm"
+            )
+            if verbose:
+                info = tagger.get_model_info()
+                print(f"✓ English model: {info['en_model']} v{info['en_version']}")
+                print(f"✓ Chinese model: {info['zh_model']} v{info['zh_version']}")
     except OSError as e:
         print(f"✗ Error loading models: {e}")
         raise
@@ -152,12 +176,21 @@ def main():
         default="data/sample_preprocessed_with_pos_tags.json",
         help="Path for output JSON file with POS tags",
     )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["codeswitching", "naive_baseline"],
+        default="codeswitching",
+        help="Tagging mode: 'codeswitching' (intelligent detection) or 'naive_baseline' (English only)",
+    )
     parser.add_argument("--quiet", action="store_true", help="Suppress verbose output")
 
     args = parser.parse_args()
 
     try:
-        stats = process_file(args.input, args.output, verbose=not args.quiet)
+        stats = process_file(
+            args.input, args.output, verbose=not args.quiet, mode=args.mode
+        )
         return 0
     except Exception as e:
         print(f"\n✗ Error: {e}")
