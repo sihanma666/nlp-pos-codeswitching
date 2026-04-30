@@ -96,7 +96,7 @@ def evaluate_batch(results, gold_standard):
     for result, gold in zip(results, gold_standard):
         result_pos = [pos for _, pos in result.get("pos_tags", [])]
         gold_pos = [pos for _, pos in gold.get("gold_pos_tags", [])]
-        languages = result.get("language_labels", [])
+        languages = result.get("language_labels") or gold.get("labels", [])
 
         if len(result_pos) == len(gold_pos):
             all_predictions.extend(result_pos)

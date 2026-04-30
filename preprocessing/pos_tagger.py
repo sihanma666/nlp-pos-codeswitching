@@ -288,6 +288,60 @@ class CodeSwitchingPOSTagger:
         }
 
 
+class MonolingualPOSTagger:
+    """
+    Naive baseline: runs English spaCy on all tokens regardless of language.
+    No language detection, no routing.
+    """
+
+    def __init__(self, model_name: str = "en_core_web_sm"):
+        try:
+            self.model = spacy.load(model_name)
+        except OSError:
+            raise OSError(
+                f"Model '{model_name}' not found. "
+                f"Install with: python -m spacy download {model_name}"
+            )
+
+    def tag_batch(self, data: List[Dict]) -> List[Dict]:
+        results = []
+        for item in data:
+            text = item.get("text", "")
+            tokens = item.get("tokens", [])
+
+            doc = self.model(text)
+
+            # align spaCy tokens to preprocessed tokens by character position
+            char_pos = 0
+            token_to_pos = {}
+            for token in tokens:
+                start = text.find(token, char_pos)
+                if start != -1:
+                    token_to_pos[token] = start
+                    char_pos = start + len(token)
+
+            pos_results = []
+            for token in tokens:
+                start = token_to_pos.get(token, -1)
+                upos = "X"
+                if start != -1:
+                    mid = start + len(token) // 2
+                    for spacy_token in doc:
+                        if spacy_token.idx <= mid < spacy_token.idx + len(spacy_token.text):
+                            upos = spacy_token.pos_
+                            break
+                pos_results.append((token, upos))
+
+            item_with_pos = item.copy()
+            item_with_pos["pos_tags"] = pos_results
+            item_with_pos["tokens_with_pos"] = [
+                {"token": token, "pos": pos} for token, pos in pos_results
+            ]
+            results.append(item_with_pos)
+
+        return results
+
+
 def print_results(results: List[Dict], num_examples: int = 5):
     """
     Pretty-print POS tagging results.
