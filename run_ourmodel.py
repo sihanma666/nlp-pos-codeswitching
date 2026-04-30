@@ -37,10 +37,14 @@ print("=" * 60)
 
 for result in fold_results:
     print(f"\nFold {result['fold']}:")
-    print(f"  overall accuracy: {result['overall_accuracy']:.4f}")
-    print(f"  overall macro f1: {result['overall_macro_f1']:.4f}")
+    print(f"  overall accuracy:       {result['overall_accuracy']:.4f}")
+    print(f"  overall macro f1:       {result['overall_macro_f1']:.4f}")
+    print(f"  switch point accuracy:  {result['switch_point_accuracy']:.4f}")
+    print(f"  switch point macro f1:  {result['switch_point_f1']:.4f}")
     print(f"  total tokens: {result['total_tokens']}")
 
 print("\nAverage across folds:")
-print(f"  overall accuracy: {summary['cv_overall_accuracy']:.4f}")
-print(f"  overall macro f1: {summary['cv_overall_macro_f1']:.4f}")
+print(f"  overall accuracy:       {summary['cv_overall_accuracy']:.4f}")
+print(f"  overall macro f1:       {summary['cv_overall_macro_f1']:.4f}")
+print(f"  switch point accuracy:  {summary['cv_switch_point_accuracy']:.4f}")
+print(f"  switch point macro f1:  {summary['cv_switch_point_f1']:.4f}")

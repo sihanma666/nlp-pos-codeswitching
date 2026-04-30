@@ -24,7 +24,7 @@ def extract_pos_tags(item, key="pred"):
 
     elif key == "gold":
         if "gold_pos_tags" in item:
-            return item["gold_pos_tags"]
+            return [x[1] for x in item["gold_pos_tags"]]
         elif "pos_tags" in item:
             return [x[1] for x in item["pos_tags"]]
         elif "tokens_with_pos" in item:

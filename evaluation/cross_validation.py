@@ -4,7 +4,7 @@ from statistics import mean
 from preprocessing.pos_tagger import CodeSwitchingPOSTagger
 
 
-from evaluation.baseline_metrics import macro_f1, token_accuracy, confusion_matrix, language_specific_accuracy
+from evaluation.baseline_metrics import macro_f1, token_accuracy, confusion_matrix, language_specific_accuracy, switch_point_metrics
 
 
 def remove_gold_labels(data):
@@ -82,6 +82,8 @@ def run_kfold_evaluation(gold_data, tagger, method, k=5, seed=42):
         "k": k,
         "cv_overall_accuracy": average(fold_results, "overall_accuracy"),
         "cv_overall_macro_f1": average(fold_results, "overall_macro_f1"),
+        "cv_switch_point_accuracy": average(fold_results, "switch_point_accuracy"),
+        "cv_switch_point_f1": average(fold_results, "switch_point_f1"),
     }
 
     return fold_results, summary
@@ -127,11 +129,16 @@ def evaluate_batch(results, gold_standard):
         "ZH": macro_f1(zh_pred, zh_ref) if zh_ref else None,
     }
 
+    # switch point metrics
+    sp_metrics = switch_point_metrics(results, gold_standard)
+
     return {
         "overall_accuracy": overall_acc,
         "overall_macro_f1": overall_macro_f1,
         "accuracy_by_language": lang_acc,
         "f1_by_language": lang_f1,
+        "switch_point_accuracy": sp_metrics["switch_accuracy"],
+        "switch_point_f1": sp_metrics["switch_macro_f1"],
         "total_tokens": len(all_predictions),
         "confusion_matrix": confusion_matrix(all_predictions, all_references),
     }
